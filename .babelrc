@@ -1,0 +1,7 @@
+{
+  //this code is only to remove console
+  //erase this if something to be rendered in browser
+  //"plugins" : [["tranform-remove-console",
+  //{"exclude" : ["error", "warn"]}]]
+
+}
