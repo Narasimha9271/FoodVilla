@@ -1,24 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RestaurantCard from "./Restaurantcard";
-import { restaurantList } from "./constants";
+import Shimmer from "./Shimmer";
 
 function filterData(searchInput, restaurants) {
   const filterData = restaurants.filter((restaurant) =>
-    restaurant?.data?.name?.includes(searchInput)
+    restaurant?.data?.name?.toLowerCase().includes(searchInput.toLowerCase())
   );
   return filterData;
 }
 
 const Body = () => {
-  const [restaurants, setRestaurants] = useState(restaurantList);
+
+  const [allRestaurants,setAllRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  return (
+  useEffect(() => {
+    //API CALL
+    getRestaurants();
+  }, []);
+
+  async function getRestaurants() {
+    const data = await fetch(
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9716&lng=77.5946&page_type=DESKTOP_WEB_LISTING"
+    );
+    const json = await data.json();
+    console.log(json);
+    setAllRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    
+  }
+
+  //Conditional rendering
+  //if restaurant is empty => shimmer UI
+  //else => actual data UI
+
+  //Early Return(not render component)
+  if(!allRestaurants) return null;
+
+  if(filteredRestaurants?.length === 0) return <div className="text-5xl m-20">No Restaurant Match your filter!!</div>
+
+  return allRestaurants?.length === 0 ? (
+    <Shimmer />
+  ) : (
     <>
-      <div className="m-2">
+      <div className="m-2 mt-4  flex justify-center">
         <input
-          className="border h-8 border-black w-30"
           type="text"
+          className="border border-r-[200] p-1 h-8 border-black w-[400]"
           placeholder="search"
           value={searchInput}
           onChange={(e) => {
@@ -26,19 +55,17 @@ const Body = () => {
           }}
         />
         <button
-          className=" m-1 h-8 p-1 rounded hover:shadow-md cursor-pointer bg-green-300"
+          className=" m-1 mt-0 h-8 p-1 rounded hover:shadow-md cursor-pointer bg-red-400 w-20"
           onClick={() => {
-            const data = filterData(searchInput, restaurants);
-            setRestaurants(() => {
-              return data;
-            });
+            const data = filterData(searchInput, allRestaurants);
+            setFilteredRestaurants(data);
           }}
         >
-          search
+          Search
         </button>
       </div>
       <div className="flex flex-wrap">
-        {restaurants.map((restaurant) => {
+        {filteredRestaurants.map((restaurant) => {
           return (
             <RestaurantCard {...restaurant.data} key={restaurant.data.id} />
           );
