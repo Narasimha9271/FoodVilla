@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import RestaurantCard from "./Restaurantcard";
 import Shimmer from "./Shimmer";
 
@@ -10,8 +11,7 @@ function filterData(searchInput, restaurants) {
 }
 
 const Body = () => {
-
-  const [allRestaurants,setAllRestaurants] = useState([]);
+  const [allRestaurants, setAllRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
@@ -25,10 +25,9 @@ const Body = () => {
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9716&lng=77.5946&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-    console.log(json);
+
     setAllRestaurants(json?.data?.cards[2]?.data?.data?.cards);
     setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards);
-    
   }
 
   //Conditional rendering
@@ -36,9 +35,9 @@ const Body = () => {
   //else => actual data UI
 
   //Early Return(not render component)
-  if(!allRestaurants) return null;
+  if (!allRestaurants) return null;
 
-  if(filteredRestaurants?.length === 0) return <div className="text-5xl m-20">No Restaurant Match your filter!!</div>
+  //if(filteredRestaurants?.length === 0) return <div className="text-5xl m-20">No Restaurant Match your filter!!</div>
 
   return allRestaurants?.length === 0 ? (
     <Shimmer />
@@ -67,7 +66,12 @@ const Body = () => {
       <div className="flex flex-wrap">
         {filteredRestaurants.map((restaurant) => {
           return (
-            <RestaurantCard {...restaurant.data} key={restaurant.data.id} />
+            <Link
+              to={"/restaurant/" + restaurant.data.id}
+              key={restaurant.data.id}
+            >
+              <RestaurantCard {...restaurant.data} />
+            </Link>
           );
         })}
       </div>
