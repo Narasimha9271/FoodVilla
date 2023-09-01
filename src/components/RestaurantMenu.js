@@ -1,50 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { IMG_CDN_URL } from "./constants";
 import Shimmer from "./Shimmer";
+import { useParams } from "react-router-dom";
+import useRestaurantMenu from "../utils/useRestrauntmenu";
+import RestaurantCategory from "./RestaurantCategory";
+import { useState } from "react";
 
 const RestaurantMenu = () => {
-  const { id } = useParams(); //Destructuring on the fly
+    const { resId } = useParams();
 
-  const [restaurant, setRestaurant] = useState("");
+    const dummy = "Dummy Data";
 
-  useEffect(() => {
-    getRestaurantInfo();
-  }, []);
+    const resInfo = useRestaurantMenu(resId);
 
-  async function getRestaurantInfo() {
-    const data = await fetch(
-      "https://instafood.onrender.com/api/menu?lat=12.9716&lng=77.5946&restaurantId=" +
-        id
+    const [showIndex, setShowIndex] = useState(null);
+
+    if (resInfo === null) return <Shimmer />;
+
+    const { name, cuisines, costForTwoMessage } =
+        resInfo?.cards[0]?.card?.card?.info;
+
+    const { itemCards } =
+        resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card
+            ?.card;
+
+    const categories =
+        resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+            (c) =>
+                c.card?.["card"]?.["@type"] ===
+                "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+        );
+    //console.log(categories);
+
+    return (
+        <div className="text-center">
+            <h1 className="font-bold my-6 text-2xl">{name}</h1>
+            <p className="font-bold text-lg">
+                {cuisines.join(", ")} - {costForTwoMessage}
+            </p>
+            {/* categories accordions */}
+            {categories.map((category, index) => (
+                // controlled component
+                <RestaurantCategory
+                    key={category?.card?.card.title}
+                    data={category?.card?.card}
+                    showItems={index === showIndex ? true : false}
+                    setShowIndex={() => setShowIndex(index)}
+                    dummy={dummy}
+                />
+            ))}
+        </div>
     );
-    const json = await data.json();
-    console.log(json.data);
-    setRestaurant(json.data);
-  }
-
-  return !restaurant ? (
-    <Shimmer />
-  ) : (
-    <div className="flex ">
-      <div>
-        <h1 className="font-bold text-lg p-3 m-3">Restaurant id: {id}</h1>
-        <h2>{restaurant?.name}</h2>
-        <img src={IMG_CDN_URL + restaurant?.cloudinaryImageId} alt="img" />
-        <h3>{restaurant?.area}</h3>
-        <h3>{restaurant?.city}</h3>
-        <h3>{restaurant?.avgRating} stars</h3>
-        <h3>{restaurant?.costForTwoMsg}</h3>
-      </div>
-      <div>
-        <h1>Menu</h1>
-        <ul>
-          {Object.values(restaurant?.menu?.items).map((item) => (
-            <li key={item.id}>{item.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
 };
 
 export default RestaurantMenu;
