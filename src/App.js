@@ -12,32 +12,9 @@ import UserContext from "./utils/UserContext";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 import Cart from "./components/Cart";
-
-//import Grocery from "./components/Grocery";
-
-// Chunking
-// Code Splitting
-// Dynamic Bundling
-// lazy Loading
-// on demand loading
-// dynamix imoprt
-
-const Grocery = lazy(() => import("./components/Grocery"));
-
 const About = lazy(() => import("./components/About"));
 
 const AppLayout = () => {
-    //const [userName, setUserName] = useState();
-
-    //authentication
-    // useEffect(() => {
-    //     // Make an API call and send username and password
-    //     const data = {
-    //         name: "Akshay Saini",
-    //     };
-    //     setUserName(data.name);
-    // }, []);
-
     return (
         <Provider store={appStore}>
             <UserContext.Provider value={{}}>
@@ -72,14 +49,7 @@ const appRouter = createBrowserRouter([
                 path: "/contact",
                 element: <Contact />,
             },
-            {
-                path: "/grocery",
-                element: (
-                    <Suspense fallback={<h1>Loading....</h1>}>
-                        <Grocery />
-                    </Suspense>
-                ),
-            },
+
             {
                 path: "/restaurants/:resId",
                 element: <RestaurantMenu />,

@@ -2,23 +2,16 @@
   "name": "food-villa",
   "version": "1.0.0",
   "description": "",
-  "main": "App.js",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
     "test": "jest",
     "watch-test": "jest --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Narasimha9271/Food-Villa.git"
-  },
+  
   "author": "Narasimha P L",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Narasimha9271/Food-Villa/issues"
-  },
-  "homepage": "https://github.com/Narasimha9271/Food-Villa#readme",
+  
   "devDependencies": {
     "@babel/core": "^7.22.11",
     "@babel/preset-env": "^7.20.2",
@@ -34,6 +27,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.4.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "cors": "^2.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",

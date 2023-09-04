@@ -35,28 +35,18 @@ const Body = () => {
 
     const fetchData = async () => {
         const data = await fetch(
-            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.3850&lng=78.4867&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9716&lng=77.5946&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
         );
 
         const jsonData = await data.json();
         setStateVariable(jsonData);
-
-        // Optional Chaining
-        // setListOfRestraunt(
-        //     json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
-        //         ?.restaurants
-        // );
-        // setFilteredRestaurant(
-        //     json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
-        //         ?.restaurants
-        // );
     };
 
     const onlineStatus = useOnlineStatus();
 
     if (onlineStatus === false)
         return (
-            <h1>
+            <h1 className="font-bold text-lg">
                 Looks like you're offline!! Please check your internet
                 connection;
             </h1>
@@ -68,21 +58,22 @@ const Body = () => {
         <Shimmer />
     ) : (
         <div className="body">
-            <div className="filter flex">
+            <div className="filter flex justify-center">
                 <div className="search m-4 p-4">
                     <input
                         type="text"
                         data-testid="searchInput"
-                        className="border border-solid border-black"
+                        placeholder="Search a restaurant you want..."
+                        className="w-96 p-3 font-poppins  focus:outline-red-400 border-solid border-2 border-gray-200 rounded-l-md"
                         value={searchText}
                         onChange={(e) => {
                             setSearchText(e.target.value);
                         }}
                     />
                     <button
-                        className="px-4 py-2 bg-green-100 m-4 rounded-lg"
+                        className="font-poppins bg-red-500 text-white hover:bg-black p-3.5 rounded-e-lg"
                         onClick={() => {
-                            // Filter the restraunt cards and update the UI
+                            // Filter the restaurant cards and update the UI
                             // searchText
                             console.log(searchText);
 
@@ -104,7 +95,7 @@ const Body = () => {
                         className="px-4 py-2 bg-gray-100 rounded-lg"
                         onClick={() => {
                             const filteredList = listOfRestaurants.filter(
-                                (res) => res.info.avgRating > 4
+                                (res) => res.info.avgRating >= 4
                             );
                             setFilteredRestaurant(filteredList);
                         }}
@@ -112,16 +103,10 @@ const Body = () => {
                         Top Rated Restaurants
                     </button>
                 </div>
-                {/* <div className="search m-4 p-4 flex items-center">
-                    <label>UserName : </label>
-                    <input
-                        className="border border-black p-2"
-                        value={loggedInUser}
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                </div> */}
+                {/* Additional code can go here if needed */}
             </div>
-            <div className="flex flex-wrap">
+
+            <div className="flex flex-wrap justify-center">
                 {filteredRestaurant.map((restaurant) => (
                     <Link
                         key={restaurant?.info.id}

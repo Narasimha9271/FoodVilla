@@ -1,11 +1,10 @@
 import { useContext } from "react";
 import { CDN_URL } from "../utils/constants";
 import UserContext from "../utils/UserContext";
-import { MdStars } from "react-icons/md";
+import Icon from "../assets/img/Icon.png";
 
 const RestaurantCard = (props) => {
     const { resData } = props;
-    const { loggedInUser } = useContext(UserContext);
 
     const {
         cloudinaryImageId,
@@ -13,39 +12,12 @@ const RestaurantCard = (props) => {
         avgRating,
         cuisines,
         costForTwo,
-        deliveryTime,
-        lastMileTravelString,
+
+        sla,
     } = resData;
 
     return (
-        // <div
-        //     data-testid="resCard"
-        //     className="w-60 rounded p-2 m-5 cursor-pointer shadow-md hover:transform hover:scale-103 bg-slate-400 h-80"
-        // >
-        //     <img
-        //         className="rounded-lg"
-        //         alt="res-logo"
-        //         src={CDN_URL + cloudinaryImageId}
-        //     />
-        //     <h3 className="font-bold py-4 text-lg">{name}</h3>
-        //     <h4>{cuisines.join(", ")}</h4>
-        //     <h4
-        //         style={
-        //             avgRating < 4
-        //                 ? { backgroundColor: "var(--light-red)" }
-        //                 : avgRating === "--"
-        //                 ? { backgroundColor: "white", color: "black" }
-        //                 : { color: "white" }
-        //         }
-        //     >
-        //         <i className="fa-solid fa-star"></i>
-        //         {avgRating}
-        //     </h4>
-        //     {/* <h4>₹{costForTwo / 100} FOR TWO</h4>
-        //     <h4>{deliveryTime} minutes</h4>
-        //     <h4>User : {loggedInUser} </h4> */}
-        // </div>
-        <div className="w-60 rounded-lg shadow-md p-4 m-5 cursor-pointer transition-transform hover:scale-103">
+        <div className="w-60 rounded-lg shadow-xl hover:shadow-2xl p-4 m-5 cursor-pointer transition-transform hover:scale-103">
             <img
                 src={CDN_URL + cloudinaryImageId}
                 className="w-full rounded-2xl"
@@ -53,16 +25,26 @@ const RestaurantCard = (props) => {
             <h3 className="font-semibold text-lg truncate overflow-hidden whitespace-nowrap">
                 {name}
             </h3>
-            <div className="flex">
-                <MdStars className="align-middle" size={22} color="#0f8a65" />
-                <span className="ml-1 text-base">{avgRating}</span>
-            </div>
+
             <div className="truncate overflow-hidden whitespace-nowrap text-base text-[#02060c99]">
                 {cuisines?.join(", ")}
             </div>
-            <h6>{resData?.info?.costForTwo}</h6>
-            <div className="text-base text-[#02060c99]">
-                {deliveryTime} {deliveryTime?.toString()?.length <= 3 && "mins"}
+            <div className="flex justify-between text-center items-center mt-3 text-slate-600 mb-3">
+                {avgRating >= 4 ? (
+                    <div className="bg-green-500 rounded-sm text-justify  text-white flex mt-1 h-6 w-14">
+                        {" "}
+                        <img className="h-6 w-6 p-1 " src={Icon}></img>
+                        {avgRating}
+                    </div>
+                ) : (
+                    <div className="bg-red-500 text-justify rounded-sm text-white flex mt-1 h-6 w-14">
+                        {" "}
+                        <img className="h-6 w-6 p-1 " src={Icon}></img>
+                        {avgRating}{" "}
+                    </div>
+                )}
+                <p className="p-1">{sla?.deliveryTime}min</p>
+                <p className="p-1">{costForTwo}</p>
             </div>
         </div>
     );
